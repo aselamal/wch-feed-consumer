@@ -5,35 +5,36 @@ import * as xmldom from "xmldom"
 const XMLSerializer = xmldom.XMLSerializer
 const serializer = new XMLSerializer()
 export interface Mapping {
-    base: String
-    username: String
-    password: String
-    tenantId: String
-    cookie: String
+    root: String
+    dataElement: String
+    sample: any
+    doc: any
 
 }
 
 
 export default class Parser {
 
-    parse = function (doc: Document) {
-            let nodes = xpath.select("count(/*)", doc)
+    parse = function (doc: Document): Mapping {
+        let nodes = xpath.select("count(/*)", doc)
 
-            let rootNames = searchForDocumentRoot(undefined, doc)
-            let rootPath = rootNames.map((n) => "*[local-name()='" + n + "']").join("/")
-            console.log("Root Located as: " + rootPath)
-            var listElement = findListElement(rootPath, doc)
-            console.log("Data element found with name: " + listElement)
+        let rootNames = searchForDocumentRoot(undefined, doc)
+        let rootPath = rootNames.map((n) => "*[local-name()='" + n + "']").join("/")
+        console.log("Root Located as: " + rootPath)
+        var listElement = findListElement(rootPath, doc)
+        console.log("Data element found with name: " + listElement)
 
-            var sampleXpath = rootPath + "/*[local-name()='" + listElement + "'][1]"
-            var sample = <any> xpath.select(sampleXpath, doc)[0]
-            var json = JSON.parse(parser.toJson(serializer.serializeToString(sample)))[listElement]
+        var sampleXpath = rootPath + "/*[local-name()='" + listElement + "'][1]"
+        var sample = <any>xpath.select(sampleXpath, doc)[0]
+        var json = JSON.parse(parser.toJson(serializer.serializeToString(doc)))
+        var sampleJson = JSON.parse(parser.toJson(serializer.serializeToString(sample)))[listElement]
 
-            return {
-                root : rootNames.join("/"),
-                dataElement : listElement,
-                sample : json
-            }
+        return {
+            root: rootNames.join("/"),
+            dataElement: listElement,
+            sample: sampleJson,
+            doc: json
+        }
     }
 
 
@@ -59,29 +60,29 @@ function searchForDocumentRoot(paths, doc) {
 
         var pathForXpath = paths.map((n) => "*[local-name()='" + n + "']").join("/")
         console.log(pathForXpath)
-        var count = xpath.select("count(" + pathForXpath + "/*)", doc)
+        var count = <any>xpath.select("count(" + pathForXpath + "/*)", doc)
         var nodes = xpath.select(pathForXpath + "/*", doc)
 
-        for (var i in nodes) {
-            var newPaths = _.clone(paths);
-            name = nodes[i].nodeName;
+        for (let node of nodes) {
+            var newPaths = _.clone(paths)
+            let name: string = node["nodeName"]
             console.log(name)
             if (count <= 4) {
                 if (name === '') {
                     throw "No candidate found"
                 }
-                newPaths.push(name);
+                newPaths.push(name)
                 try {
-                    var result = searchForDocumentRoot(newPaths, doc);
-                    return result;
+                    var result = searchForDocumentRoot(newPaths, doc)
+                    return result
                 } catch (err) {
-                    console.log(err);
+                    console.log(err)
                 }
             } else {
                 return newPaths
             }
         }
-        throw "No candidate found";
+        throw "No candidate found"
 
 
     }

@@ -9,7 +9,6 @@ export default class FeedFetcher {
         let res = await request.get(url, {
             resolveWithFullResponse: true
         })
-        console.log(res.body)
         return new dom().parseFromString(res.body)
     }
 
