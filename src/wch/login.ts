@@ -5,7 +5,7 @@ import * as setCookie from "set-cookie-parser"
 export default async function login(): Promise<string> {
     console.log("calling login")
     try {
-        /** 
+
         let response = await (<any>request).get(`${Environment.base}/login/v1/basicauth`,
             {
                 "auth": {
@@ -21,7 +21,7 @@ export default async function login(): Promise<string> {
             loginInfo = loginInfo + cookie.name + "=" + cookie.value + ";"
         }
 
-        */let loginInfo = "SOmeCookie"
+        //let loginInfo = "SOmeCookie"
         console.log("acquired login cookie" + loginInfo)
         Environment.cookie = loginInfo
         return loginInfo

@@ -26,14 +26,9 @@ app.get("/fetch", function (req, res) {
 
 app.post("/create", function (req, res) {
     let mappingRequest = req.body
-
-    let elements = _.chain(flatten(mappingRequest.sample)).toPairs().filter((entry) => entry[1] === "__TEXT__" ).map(
-        (entry) => textDef(entry[0])
-    ).value()
-    console.log(elements)
-
-    //console.log(mapping)
-    res.send("All Good")
+    createMapping(mappingRequest).then((result) => {
+        res.send(result)
+    })
 })
 
 app.post("/run", function (req, res) {
@@ -57,7 +52,16 @@ init().then(() => {
 })
 
 async function createMapping(data) {
-
+  let elements = _.chain(flatten(data.sample)).toPairs().filter((entry) => entry[1] === "__TEXT__" ).map(
+        (entry) => textDef(entry[0])
+    ).value()
+    console.log(elements)
+    let newType = contentType(
+        "MySample",
+        elements
+    )
+    let result = await createContentType(newType)
+    return result
 }
 
 async function fetch(url) {

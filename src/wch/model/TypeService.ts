@@ -17,15 +17,16 @@ export default class TypeService {
         console.log("CREATING TYPE")
         console.log("ENVIRONMENT COOKIE" + Environment.cookie)
         try {
-            let response = await (<any>request).get(`${Environment.base}/authoring/v1/types`,
+            let response = await (<any>request).post(`${Environment.base}/authoring/v1/types`,
                 {
                     "headers": {
                         "Cookie": Environment.cookie
-                    }
+                    },
+                    json: type
                 }
             )
             console.log(response)
-            //console.log(response.body)
+            return response
         } catch (err) {
             console.log(err)
             throw err
