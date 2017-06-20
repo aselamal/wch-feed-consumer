@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2015",
+    "rootDir": "./src",
+    "outDir": "./lib",
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noUnusedParameters": false,
+    "noUnusedLocals": false
+  },
+  "exclude": [
+    "lib",
+    "node_modules",
+    "typings/browser",
+    "typings/browser.d.ts"
+  ]
+}
