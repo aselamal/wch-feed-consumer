@@ -1,9 +1,12 @@
 import * as express from "express"
 import TypeService from "./wch/model/TypeService"
+import ContentService from "./wch/model/ContentService"
 import ElementDefBuilder from "./wch/model/ElementDefinition"
 const textDef = ElementDefBuilder.createTextElement
 const createContentType = TypeService.create
 const contentType = TypeService.createContentType
+const createContent = ContentService.create
+const content = ContentService.createContent
 import { Environment } from "./wch/environment"
 import login from "./wch/login"
 import FeedFetcher from "./feedFetcher"
@@ -12,8 +15,6 @@ import * as bodyParser from "body-parser"
 import * as _ from "lodash"
 import * as flatten from "flat"
 const parser = new Parser()
-console.log(login)
-//console.log(login.login())
 
 const app = express()
 app.use(bodyParser.json())
@@ -38,16 +39,9 @@ app.post("/run", function (req, res) {
 })
 
 init().then(() => {
-    let result = contentType(
-        "myTypeName",
-        [textDef("myText1"),
-        textDef("myText2")]
-    )
-    //createContentType(result)
-    console.log(result)
     app.listen(3000, function () {
         console.log("login here" + Environment.cookie)
-        console.log('Example app listening on port 3000!')
+        console.log('WCH Feed Consumer app app listening on port 3000!')
     })
 })
 
