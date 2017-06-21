@@ -144,7 +144,10 @@ async function run(body) {
     for (let content of contents) {
         await createContent(content)
     }
-    return "Success!"
+    return {
+        "imported"  : contents.length,
+        "message" : "Success!"
+    }
 }
 
 async function init() {
