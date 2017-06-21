@@ -3,6 +3,8 @@ import TypeService from "./wch/model/TypeService"
 import ContentService from "./wch/model/ContentService"
 import ElementDefBuilder from "./wch/model/ElementDefinition"
 const textDef = ElementDefBuilder.createTextElement
+const linkDef = ElementDefBuilder.createLinkElement
+const numberDef = ElementDefBuilder.createNumberElement
 const createContentType = TypeService.create
 const contentType = TypeService.createContentType
 const createContent = ContentService.create
@@ -46,16 +48,24 @@ init().then(() => {
 })
 
 async function createMapping(data) {
-  let elements = _.chain(flatten(data.sample)).toPairs().filter((entry) => entry[1] === "__TEXT__" ).map(
-        (entry) => textDef(entry[0])
-    ).value()
+    let elements = _.chain(flatten(data.sample)).toPairs().map((entry) => {
+        let key = entry[0].replace(".", "_")
+        let value = entry[1]
+        switch (value) {
+            case "__TEXT__": return textDef(key)
+            case "__LINK__": return linkDef(key)
+            case "__NUMBER__": return numberDef(key)
+        }
+    }).filter( (e) => { return e }).value()
+
     console.log(elements)
     let newType = contentType(
-        "MySample",
+        "MySample" +  _.random(0, 1000, false),
         elements
     )
-    let result = await createContentType(newType)
-    return result
+    let createdType = await createContentType(newType)
+    data.typeId = createdType.id;
+    return 
 }
 
 async function fetch(url) {

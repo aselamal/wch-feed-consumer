@@ -15,4 +15,20 @@ export default class ElementDefinitionBuilders {
         }
     }
 
+    static createNumberElement = function (key: string): ElementDefinition {
+        return {
+            "elementType": "number",
+            "key": key,
+            "label": key
+        }
+    }
+
+     static createLinkElement = function (key: string): ElementDefinition {
+        return {
+            "elementType": "link",
+            "key": key,
+            "label": key
+        }
+    }
+
 }
