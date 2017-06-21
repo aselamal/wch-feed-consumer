@@ -22,9 +22,10 @@ import * as bodyParser from "body-parser"
 import * as _ from "lodash"
 import * as flatten from "flat"
 const parser = new Parser()
-
+var cors = require('cors')
 const app = express()
 app.use(bodyParser.json())
+app.use(cors())
 app.get("/fetch", function (req, res) {
     let url = req.query["url"]
     fetch(url).then((data) => {
