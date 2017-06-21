@@ -37,7 +37,7 @@ app.post("/create", function (req, res) {
 app.post("/run", function (req, res) {
     let url = req.query["url"]
     let typeId = req.query["typeId"]
-    let mapping = req.body
+    //let mapping = req.body
 })
 
 init().then(() => {
@@ -64,8 +64,8 @@ async function createMapping(data) {
         elements
     )
     let createdType = await createContentType(newType)
-    data.typeId = createdType.id;
-    return 
+    data.typeId = createdType.id
+    return data
 }
 
 async function fetch(url) {
