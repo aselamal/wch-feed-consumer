@@ -108,7 +108,7 @@ async function run(body) {
             switch (mappingValue) {
                 case "__TEXT__": return [key, text(value)]
                 case "__LINK__": return [key, link(value)]
-                case "__NUMBER__": return [key, number(value)]
+                case "__NUMBER__": return [key, number( <any> Number(value))]
             }
 
         }).filter((e) => { return e }).value()
