@@ -3,12 +3,17 @@ import * as request from "request-promise-native"
 import { Environment } from "../environment"
 
 export default class ContentService {
-    static createContent = function (name: string, typeId: string, elements: Element[]) {
+    static createContent = function (name: string, typeId: string, elements: any[]) {
+        let data = {}
+        elements.forEach((tuple) => {
+            // [ key, elementData]
+            data[tuple[0]] = tuple[1]
+        })
         return {
             "name": name,
             "status": "ready",
             "typeId": typeId,
-            "elements": elements
+            "elements": data
         }
     }
 
