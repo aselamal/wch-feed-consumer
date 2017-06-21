@@ -115,9 +115,9 @@ async function run(body) {
         //console.log(elements)
         return content(flattenedItem[titleKey], typeId, elements)
     })
-    console.log(JSON.stringify(contents))
+    //console.log(JSON.stringify(contents))
     for (let content of contents) {
-        //  await createContent(content)
+         await createContent(content)
     }
     return "Success!"
 }
