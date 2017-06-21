@@ -72,6 +72,31 @@ async function createMapping(data) {
     )
     let createdType = await createContentType(newType)
     data.typeId = createdType.id
+     let root = data.root // rss/channel
+    let dataElement = data.dataElement // item
+    let path = root.replace("/", ".") + "." + dataElement // rss.channel.item
+    let feed = data.doc
+    let items: any[] = <any>_.get(feed, path)
+    let flatDataSample = flatten(items[0])
+    let flatSample = flatten(data.sample)
+    let titleKey = _.findKey(flatSample, function (o) { return o === "__TITLE__" })
+    let elementsContent = _.chain(flatSample).toPairs().map((entry) => {
+        let originalKey = entry[0]
+        let key = originalKey.replace(".", "_")
+        let mappingValue = entry[1]
+        let value = flatDataSample[originalKey]
+
+        switch (mappingValue) {
+            case "__TEXT__": return [key, text(value)]
+            case "__LINK__": return [key, link(value)]
+            case "__NUMBER__": return [key, number(<any>Number(value))]
+        }
+
+    }).filter((e) => { return e }).value()
+    //console.log(elements)
+    data.previewContent = content(flatDataSample[titleKey], data.typeId, elementsContent)
+
+
     return data
 }
 
@@ -108,7 +133,7 @@ async function run(body) {
             switch (mappingValue) {
                 case "__TEXT__": return [key, text(value)]
                 case "__LINK__": return [key, link(value)]
-                case "__NUMBER__": return [key, number( <any> Number(value))]
+                case "__NUMBER__": return [key, number(<any>Number(value))]
             }
 
         }).filter((e) => { return e }).value()
@@ -117,7 +142,7 @@ async function run(body) {
     })
     //console.log(JSON.stringify(contents))
     for (let content of contents) {
-         await createContent(content)
+        await createContent(content)
     }
     return "Success!"
 }
