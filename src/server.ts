@@ -55,6 +55,7 @@ init().then(() => {
 })
 
 async function createMapping(data) {
+    let typeName = data.typeName ? data.typeName : "MySample" + _.random(0, 1000, false)
     let elements = _.chain(flatten(data.sample)).toPairs().map((entry) => {
         let key = entry[0].replace(".", "_")
         let value = entry[1]
@@ -65,9 +66,8 @@ async function createMapping(data) {
         }
     }).filter((e) => { return e }).value()
 
-    console.log(elements)
-    let newType = contentType(
-        "MySample" + _.random(0, 1000, false),
+    //console.log(elements)
+    let newType = contentType(typeName,
         elements
     )
     let createdType = await createContentType(newType)
